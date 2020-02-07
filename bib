@@ -1,5 +1,11 @@
 #! /usr/bin/sh
 # Script to obtain references from DOI
+# It needs to be placed in the same folder where the pdf articles are
+# It iterates over each pdf file and tries to retrieve their DOI.
+# It requires:
+# - pdfinfo
+# - pdftotext
+# - curl
 # Author: Oliver Rodriguez
 
 clear
@@ -28,15 +34,14 @@ if [ $( echo "$data" | grep -io "title") ]; then
 	data=$(echo "$data" | sed "s/$key2/$key/")
 
 	# Renames the pdf file according to: Rodriguez2020_Title-of-the-article
-	fileName="$HOME/Documents/JabRef/Articles_sorted/"$key"_"$title".pdf"
-	# Moves the pdf to a specific directory given by fileName
+	fileName=$key"_"$title".pdf"
 	mv "$x" "$fileName"
 	
 	# Adds bib data to file
 	echo "$data" >> References_script.bib
 	let n+=1
 else
-	echo "No bib info retrieved"	
+	echo "No bib info retrieved"
 fi
 done
 
