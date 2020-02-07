@@ -27,17 +27,17 @@ if [ $( echo "$data" | grep -io "title") ]; then
 
 	# Finds the original bibtexkey:
 	key2=$(echo "$data" | grep -io "@.*" | sed -e 's/@article{//' -e 's/,//')
-	# Formats the original bibtexkey to something more appropriate, no underscores:
+	# Formats the original bibtexkey to something more appropriate (Rodriguez2020), no underscores:
 	key=$(echo "$key2" | sed 's/_//g')
 	echo "$key"
 	# Replaces the bibkey:
 	data=$(echo "$data" | sed "s/$key2/$key/")
 
-	# Renames the pdf file according to: Rodriguez2020_Title-of-the-article
+	# Renames the pdf file according to: Rodriguez2020_Title-of-the-article.pdf
 	fileName=$key"_"$title".pdf"
 	mv "$x" "$fileName"
 	
-	# Adds bib data to file
+	# Adds bib data to a file
 	echo "$data" >> References_script.bib
 	let n+=1
 else
@@ -45,4 +45,4 @@ else
 fi
 done
 
-echo "Number of files sorted: ""$n"
+echo "Number of articles processed: ""$n"
