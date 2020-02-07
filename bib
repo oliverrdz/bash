@@ -1,0 +1,43 @@
+#! /usr/bin/sh
+# Script to obtain references from DOI
+# Author: Oliver Rodriguez
+
+clear
+n=0
+
+for x in *pdf
+do
+
+# Try to get DOI from pdfinfo or pdftotext output (copied from @LukeSmith)
+doi=$(pdfinfo "$x" | grep -io "doi:.*") || doi=$(pdftotext "$x" 2>/dev/null - | grep -io "doi:.*")
+
+# Check crossref.org for the bib citation (copied from @LukeSmith)
+data=$(curl -sf "http://api.crossref.org/works/$doi/transform/application/x-bibtex" -w " \\n")
+
+# Reads the bibtex data and retrieves title and bibtexkey
+if [ $( echo "$data" | grep -io "title") ]; then
+
+	title=$(echo "$data" | grep -io "title.*" - | sed -e 's/title = {//' -e 's/},//' -e 's/\s/-/g' -e 's|\/||g')
+
+	# Finds the original bibtexkey:
+	key2=$(echo "$data" | grep -io "@.*" | sed -e 's/@article{//' -e 's/,//')
+	# Formats the original bibtexkey to something more appropriate, no underscores:
+	key=$(echo "$key2" | sed 's/_//g')
+	echo "$key"
+	# Replaces the bibkey:
+	data=$(echo "$data" | sed "s/$key2/$key/")
+
+	# Renames the pdf file according to: Rodriguez2020_Title-of-the-article
+	fileName="$HOME/Documents/JabRef/Articles_sorted/"$key"_"$title".pdf"
+	# Moves the pdf to a specific directory given by fileName
+	mv "$x" "$fileName"
+	
+	# Adds bib data to file
+	echo "$data" >> References_script.bib
+	let n+=1
+else
+	echo "No bib info retrieved"	
+fi
+done
+
+echo "Number of files sorted: ""$n"

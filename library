@@ -1,0 +1,7 @@
+#! /usr/bin/sh
+# Opens dmenu with the list of pdf articles and opens the selected one
+
+directory="$HOME/Documents/Articles/"
+file=$(ls "$directory" | dmenu -i -l 10)
+xdg-open "$directory""$file"
+
