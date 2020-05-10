@@ -1,0 +1,4 @@
+#!/usr/bin/sh
+cd ~/gDrive/Literature/Books
+ls | dmenu -i -l 10 | sed -e 's/[[:space:]]/\\ /g' | xargs foxitreader
+
