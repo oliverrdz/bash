@@ -1,0 +1,3 @@
+#!/usr/bin/sh
+cd ~/gitHub/configs
+ls | dmenu -i | xargs alacritty -e vim
