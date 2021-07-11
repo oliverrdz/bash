@@ -1,0 +1,14 @@
+#!/usr/bin/sh
+cd ~/gitHub/bashScripts
+option=$(cat bookmarks_ranger | dmenu)
+echo $option
+
+case $option in
+    gitHub)
+        cd ~/gitHub
+        ;;
+    1_ElectroLab)
+        cd ~/Insync/oliverrz@illinois.edu/Google\ Drive/Projects/1_ElectroLab
+        ;;
+esac
+xargs alacritty
